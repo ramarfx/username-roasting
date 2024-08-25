@@ -1,13 +1,14 @@
-import { Github, Instagram, Linkedin, Settings } from "lucide-react";
+import { Github, Instagram, Settings } from "lucide-react";
 import Loader from "./components/Loader";
 import { Button } from "./components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "./components/ui/card";
+import { Card, CardContent } from "./components/ui/card";
 import { Input } from "./components/ui/input";
+import { useState } from "react";
 
 function App() {
+  const [apiKey, setApiKey] = useState(process.env.API_KEY);
+
+  console.log(apiKey);
   return (
     <>
       <div className="container">
@@ -45,7 +46,12 @@ function App() {
               <CardContent>
                 <div className="mt-4 grid gap-1.5">
                   <label htmlFor="apiKey">Gemini API Key (optional)</label>
-                  <Input type="text" id="apiKey" placeholder="API key" />
+                  <Input
+                    type="text"
+                    id="apiKey"
+                    onChange={(e) => setApiKey(e.target.value)}
+                    placeholder="API key"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -54,12 +60,16 @@ function App() {
 
           {/* footer start */}
           <footer className="flex items-center justify-start md:justify-evenly gap-8 absolute bottom-4 max-w-screen-sm w-full">
-            <a href="https://github.com/ramarfx" className="flex gap-2 items-center">
+            <a
+              href="https://github.com/ramarfx"
+              className="flex gap-2 items-center">
               <Github className="size-[18px]" />
               <p>@ramarfx</p>
             </a>
             <p className="hidden md:block">hanya sekedar hiburan semata</p>
-            <a href="https://instagram.com/ramtxh" className="flex gap-2 items-center">
+            <a
+              href="https://instagram.com/ramtxh"
+              className="flex gap-2 items-center">
               <Instagram className="size-[18px]" />
               <p>@ramtxh</p>
             </a>
