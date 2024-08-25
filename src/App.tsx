@@ -18,8 +18,8 @@ function App() {
   const [username, setUsername] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFinished, setIsFinished] = useState<boolean>(true);
-  const [isLoadingFinish, setIsLoadingFinish] = useState<boolean>(true);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
+  const [isLoadingFinish, setIsLoadingFinish] = useState<boolean>(false);
   const [isBrainrot, setIsBrainrot] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
 
