@@ -77,7 +77,7 @@ function App() {
         } catch (error) {
           if (error instanceof GoogleGenerativeAIFetchError) {
             setOutput(
-              "API KEY lu salah ngabb💀☠️🔥 <br> udah pake default punya gw aja dehh"
+              "API KEY lu gak valid ngabb💀☠️🔥 <br> udah pake default punya gw aja dehh"
             );
           }
         } finally {
@@ -132,7 +132,7 @@ function App() {
                     type="text"
                     id="username"
                     name="username"
-                    placeholder="sagasitas.official"
+                    placeholder="zaenal.chumbucket99"
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
@@ -184,14 +184,14 @@ function App() {
           <footer className="flex items-center justify-start md:justify-evenly gap-8 my-8 max-w-screen-sm w-full">
             <a
               href="https://github.com/ramarfx"
-              className="flex gap-2 items-center">
+              className="flex gap-2 items-center hover:underline-offset-2 hover:underline">
               <Github className="size-[18px]" />
               <p>@ramarfx</p>
             </a>
-            <p className="hidden md:block">hanya sekedar hiburan semata</p>
+            <p className="hidden md:block">Ramarfx 2024</p>
             <a
               href="https://instagram.com/ramtxh"
-              className="flex gap-2 items-center">
+              className="flex gap-2 items-center hover:underline-offset-2 hover:underline">
               <Instagram className="size-[18px]" />
               <p>@ramtxh</p>
             </a>
