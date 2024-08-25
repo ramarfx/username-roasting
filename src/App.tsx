@@ -11,14 +11,16 @@ import {
   HarmBlockThreshold,
   HarmCategory,
 } from "@google/generative-ai";
+import { Checkbox } from "./components/ui/checkbox";
 
 function App() {
   const [apiKey, setApiKey] = useState<string>(process.env.API_KEY!);
   const [username, setUsername] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [isLoadingFinish, setIsLoadingFinish] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(true);
+  const [isLoadingFinish, setIsLoadingFinish] = useState<boolean>(true);
+  const [isBrainrot, setIsBrainrot] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -59,7 +61,7 @@ function App() {
           });
 
           const result = await model.generateContentStream({
-            systemInstruction: `berikan dan komentar yang agak menyakitkan tetapi dalam konteks lucu lucuan aja dalam bahasa gaul untuk username seperti berikut ini : ${username}. dengan minimal 100 kata`,
+            systemInstruction: `berikan dan komentar yang agak menyakitkan tetapi dalam konteks lucu lucuan aja dalam bahasa gaul ${isBrainrot ? 'dan sisipkan kosakata brainrot seperti skibidi, mewing, sigma, gyatt, aura, edging, pay tax, ok gas ok gas, gemoy, dan lain lain' : ''} untuk username seperti berikut ini : ${username}. dengan minimal 100 kata`,
             contents: [
               {
                 role: "user",
@@ -85,7 +87,7 @@ function App() {
         }
       };
     }
-  }, [username, apiKey]);
+  }, [username, apiKey, isBrainrot]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -174,6 +176,15 @@ function App() {
                     onChange={(e) => setApiKey(e.target.value)}
                     placeholder="API key"
                   />
+                </div>
+
+                <div className="flex mt-4 items-center space-x-2">
+                  <Checkbox
+                    id="brainrotVer"
+                    checked={isBrainrot}
+                    onClick={() => setIsBrainrot(!isBrainrot)}
+                  />
+                  <label htmlFor="brainrotVer">Brainrot version</label>
                 </div>
               </CardContent>
             </Card>
