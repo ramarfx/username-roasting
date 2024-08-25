@@ -7,6 +7,7 @@ import { Input } from "./components/ui/input";
 import { useEffect, useRef, useState } from "react";
 import {
   GoogleGenerativeAI,
+  GoogleGenerativeAIFetchError,
   HarmBlockThreshold,
   HarmCategory,
 } from "@google/generative-ai";
@@ -20,7 +21,11 @@ function App() {
 
   useEffect(() => {
     const form = formRef.current;
-    // const output = outputRef.current;
+
+    if (apiKey === "") {
+      setApiKey(process.env.API_KEY!);
+    }
+
     if (form) {
       form.onsubmit = async (e) => {
         e.preventDefault();
@@ -52,7 +57,7 @@ function App() {
           });
 
           const result = await model.generateContentStream({
-            systemInstruction: `berikan dan komentar yang agak menyakitkan tetapi dalam konteks lucu lucuan aja dalam bahasa gaul untuk username seperti berikut ini : ${username}.`,
+            systemInstruction: `berikan dan komentar yang agak menyakitkan tetapi dalam konteks lucu lucuan aja dalam bahasa gaul untuk username seperti berikut ini : ${username}. dengan maksimal 100 kata`,
             contents: [
               {
                 role: "user",
@@ -60,9 +65,6 @@ function App() {
               },
             ],
           });
-          // const responseText = await result.response;
-
-          // setOutput(responseText.text());
 
           let buffer = [];
           let md = new MarkdownIt();
@@ -70,9 +72,10 @@ function App() {
             buffer.push(response.text());
             setOutput(md.render(buffer.join("")));
           }
-          // console.log((await result.response).text());
         } catch (error) {
-          setOutput((error as Error).message);
+          if (error instanceof GoogleGenerativeAIFetchError) {
+            setOutput('API KEY lu salah ngabb💀☠️🔥 <br> udah pake default punya gw aja dehh');
+          }
         } finally {
           setIsLoading(false);
         }
@@ -85,7 +88,7 @@ function App() {
       <div className="container">
         <div className="max-w-screen-sm mx-auto">
           <h1 className="font-outfit font-bold text-4xl text-center mt-4">
-            Name Roasting
+            Username Roasting
           </h1>
 
           {/* user input start */}
