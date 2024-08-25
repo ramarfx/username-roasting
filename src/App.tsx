@@ -57,7 +57,7 @@ function App() {
           });
 
           const result = await model.generateContentStream({
-            systemInstruction: `berikan dan komentar yang agak menyakitkan tetapi dalam konteks lucu lucuan aja dalam bahasa gaul untuk username seperti berikut ini : ${username}. dengan maksimal 100 kata`,
+            systemInstruction: `berikan dan komentar yang agak menyakitkan tetapi dalam konteks lucu lucuan aja dalam bahasa gaul untuk username seperti berikut ini : ${username}. dengan minimal 100 kata`,
             contents: [
               {
                 role: "user",
