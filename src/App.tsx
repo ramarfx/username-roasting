@@ -17,6 +17,8 @@ function App() {
   const [username, setUsername] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
+  const [isLoadingFinish, setIsLoadingFinish] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -74,7 +76,9 @@ function App() {
           }
         } catch (error) {
           if (error instanceof GoogleGenerativeAIFetchError) {
-            setOutput('API KEY lu salah ngabb💀☠️🔥 <br> udah pake default punya gw aja dehh');
+            setOutput(
+              "API KEY lu salah ngabb💀☠️🔥 <br> udah pake default punya gw aja dehh"
+            );
           }
         } finally {
           setIsLoading(false);
@@ -83,11 +87,36 @@ function App() {
     }
   }, [username, apiKey]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoadingFinish(true);
+    }, 2500);
+  }, [isLoadingFinish]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsFinished(true);
+    }, 2700);
+  }, [isFinished]);
+
   return (
     <>
       <div className="container">
+        {!isFinished && (
+          <div className="bg-black/50 backdrop-blur-md w-screen h-screen fixed top-0 left-0 z-30 flex justify-center items-center">
+            <img
+              src="/gemini.svg"
+              alt="gemini icon"
+              className={`z-10 transition-all ease-in-out animate-spin ${
+                isLoadingFinish ? "size-0" : "size-[100px] md:size-[300px]"
+              }`}
+              style={{ animationDuration: "2.5s" }}
+            />
+          </div>
+        )}
+
         <div className="max-w-screen-sm mx-auto">
-          <h1 className="font-outfit font-bold text-4xl text-center mt-4">
+          <h1 className="font-outfit font-bold text-4xl text-center my-8">
             Username Roasting
           </h1>
 
@@ -96,7 +125,9 @@ function App() {
             <CardContent>
               <form method="post" ref={formRef}>
                 <div className="py-4 grid gap-1.5">
-                  <label htmlFor="username">Input nama atau username kamu</label>
+                  <label htmlFor="username">
+                    Input nama atau username kamu
+                  </label>
                   <Input
                     type="text"
                     id="username"
@@ -114,7 +145,7 @@ function App() {
           {/* user input end */}
 
           {/* user input start */}
-          <Card className="mt-4">
+          <Card className="mt-4 relative">
             {isLoading ? (
               <Loader />
             ) : (
@@ -150,7 +181,7 @@ function App() {
           {/* settings end */}
 
           {/* footer start */}
-          <footer className="flex items-center justify-start md:justify-evenly gap-8 mt-4 max-w-screen-sm w-full">
+          <footer className="flex items-center justify-start md:justify-evenly gap-8 my-8 max-w-screen-sm w-full">
             <a
               href="https://github.com/ramarfx"
               className="flex gap-2 items-center">

@@ -4,8 +4,9 @@ import { Skeleton } from "./ui/skeleton";
 const Loader = () => {
   return (
     <>
-      <CardHeader>
+      <CardHeader className="w-full flex flex-row items-center justify-between">
         <Skeleton className="w-[160px] h-4" />
+        <img src="/gemini.svg" alt="gemini icon" className="size-5 absolute right-4 top-4 animate-spin" style={{ animationDuration: "3s" }} />
       </CardHeader>
       <CardContent>
         <div className="flex gap-2 flex-wrap">
