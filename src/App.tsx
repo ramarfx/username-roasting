@@ -1,37 +1,125 @@
 import { Github, Instagram, Settings } from "lucide-react";
 import Loader from "./components/Loader";
 import { Button } from "./components/ui/button";
-import { Card, CardContent } from "./components/ui/card";
+import { Card, CardContent, CardHeader } from "./components/ui/card";
+import MarkdownIt from "markdown-it";
 import { Input } from "./components/ui/input";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  GoogleGenerativeAI,
+  HarmBlockThreshold,
+  HarmCategory,
+} from "@google/generative-ai";
 
 function App() {
-  const [apiKey, setApiKey] = useState(process.env.API_KEY);
+  const [apiKey, setApiKey] = useState<string>(process.env.API_KEY!);
+  const [username, setUsername] = useState<string>("");
+  const [output, setOutput] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  console.log(apiKey);
+  useEffect(() => {
+    const form = formRef.current;
+    // const output = outputRef.current;
+    if (form) {
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        setIsLoading(true);
+
+        try {
+          const genAI = new GoogleGenerativeAI(apiKey);
+          const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+            safetySettings: [
+              {
+                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold: HarmBlockThreshold.BLOCK_NONE, // Allow content
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold: HarmBlockThreshold.BLOCK_NONE, // Allow content
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold: HarmBlockThreshold.BLOCK_NONE, // Allow content
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold: HarmBlockThreshold.BLOCK_NONE, // Allow content
+              },
+            ],
+          });
+
+          const result = await model.generateContentStream({
+            systemInstruction: `berikan dan komentar yang agak menyakitkan tetapi dalam konteks lucu lucuan aja dalam bahasa gaul untuk username seperti berikut ini : ${username}.`,
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: username }],
+              },
+            ],
+          });
+          // const responseText = await result.response;
+
+          // setOutput(responseText.text());
+
+          let buffer = [];
+          let md = new MarkdownIt();
+          for await (let response of result.stream) {
+            buffer.push(response.text());
+            setOutput(md.render(buffer.join("")));
+          }
+          // console.log((await result.response).text());
+        } catch (error) {
+          setOutput((error as Error).message);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    }
+  }, [username, apiKey]);
+
   return (
     <>
       <div className="container">
         <div className="max-w-screen-sm mx-auto">
           <h1 className="font-outfit font-bold text-4xl text-center mt-4">
-            Instagram Roasting
+            Name Roasting
           </h1>
 
           {/* user input start */}
           <Card className="mt-4">
             <CardContent>
-              <div className="py-4 grid gap-1.5">
-                <label htmlFor="username">Input username instagram mu</label>
-                <Input type="text" id="username" placeholder="username" />
-              </div>
-              <Button className="px-8">Submit</Button>
+              <form method="post" ref={formRef}>
+                <div className="py-4 grid gap-1.5">
+                  <label htmlFor="username">Input nama atau username kamu</label>
+                  <Input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="sagasitas.official"
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
+                <Button className="px-8" type="submit">
+                  Submit
+                </Button>
+              </form>
             </CardContent>
           </Card>
           {/* user input end */}
 
           {/* user input start */}
           <Card className="mt-4">
-            <Loader />
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <CardHeader>Roastingan untuk {username}:</CardHeader>
+                <CardContent dangerouslySetInnerHTML={{ __html: output }} />
+              </>
+            )}
           </Card>
           {/* user input end */}
 
@@ -59,7 +147,7 @@ function App() {
           {/* settings end */}
 
           {/* footer start */}
-          <footer className="flex items-center justify-start md:justify-evenly gap-8 absolute bottom-4 max-w-screen-sm w-full">
+          <footer className="flex items-center justify-start md:justify-evenly gap-8 mt-4 max-w-screen-sm w-full">
             <a
               href="https://github.com/ramarfx"
               className="flex gap-2 items-center">
