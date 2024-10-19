@@ -12,6 +12,7 @@ import {
   HarmCategory,
 } from "@google/generative-ai";
 import { Checkbox } from "./components/ui/checkbox";
+import { ModeToggle } from "./components/mode-toggle";
 
 function App() {
   const [apiKey, setApiKey] = useState<string>(process.env.API_KEY!);
@@ -118,9 +119,13 @@ function App() {
         )}
 
         <div className="max-w-screen-sm mx-auto">
-          <h1 className="font-outfit font-bold text-4xl text-center my-8">
-            Username Roasting
-          </h1>
+          <div className="my-8 flex items-center justify-between">
+            <h1 className="font-outfit font-bold text-4xl text-center">
+              Username Roasting
+            </h1>
+
+            <ModeToggle/>
+          </div>
 
           {/* user input start */}
           <Card className="mt-4">
